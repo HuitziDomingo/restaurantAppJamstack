@@ -4,13 +4,15 @@ import { SideBar } from './components/ui'
 
 function App() {
   return (
-    <div className="">
+    <div className="md:flex min-h-screen">
       <SideBar />
-      <Routes>
-        <Route path="/" element={<Orders />} />
-        <Route path="/menu" element={<Menu />} />
-        <Route path="/nuevo-paltillo" element={<NewPlat />} />
-      </Routes>
+      <div className="md:w-3/5 xl:w-4/5 p-6">
+        <Routes>
+          <Route path="/" element={<Orders />} />
+          <Route path="/menu" element={<Menu />} />
+          <Route path="/nuevo-paltillo" element={<NewPlat />} />
+        </Routes>
+      </div>
     </div>
   );
 }
