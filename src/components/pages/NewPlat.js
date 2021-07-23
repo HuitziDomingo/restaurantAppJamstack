@@ -1,8 +1,18 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
+import { FirebaseContext } from '../../firebase'
+import { useNavigate } from 'react-router-dom'
+import FileUploader from 'react-firebase-file-uploader'
 
 const NewPlat = () => {
+
+    //Context con las operaciones de firebase
+    const { firebase } = useContext(FirebaseContext)
+    console.log(firebase)
+
+    //Hook de redirecionamiento
+    const navigate = useNavigate()
 
     //Validacion del formulario
     const formik = useFormik({
@@ -19,7 +29,15 @@ const NewPlat = () => {
             category: Yup.string().required('La categoria es oblifatoria'),
             description: Yup.string().min(10, 'La descripcion debe de ser ms larga').required('La descripcion es obligatoria')
         }),
-        onSubmit: data => console.log(data)
+        onSubmit: plates => {
+            try {
+                plates.exist = true
+                firebase.db.collection('products').add(plates)
+                navigate('/menu')//Redireccionasmos
+            } catch (e) {
+                console.log(e)
+            }
+        }
     })
 
     return (
@@ -45,7 +63,7 @@ const NewPlat = () => {
                                     <p className="font-bold">Hubo un error</p>
                                     <p>{formik.errors.name}</p>
                                 </div>
-                            ): null
+                            ) : null
                         }
                         <div className="mb-4">
                             <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="price">Precio</label>
@@ -96,12 +114,12 @@ const NewPlat = () => {
                         }
                         <div className="mb-4">
                             <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="image">Imagen</label>
-                            <input type="file"
-                                className="shadow appearance-none border rounded-full w-full py-2 px-3 text-gray-700 leading-tight focus-outline-none focus:shadow-outline"
+                            <FileUploader
+                                acept="image/*"
                                 id="image"
-                                value={formik.values.image}
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}
+                                name="image"
+                                randomizerFilename
+                                storageRef={firebase.storage.ref('products')}
                             />
                         </div>
                         <div className="mb-4">

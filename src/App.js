@@ -1,11 +1,11 @@
 import { Routes, Route } from 'react-router'
-import firebase, { firebaseContext } from './firebase'
+import firebase, { FirebaseContext } from './firebase'
 import { Orders, Menu, NewPlat } from './components/pages'
 import { SideBar } from './components/ui'
 
 function App() {
   return (
-    <firebaseContext.Provider
+    <FirebaseContext.Provider
       value={{
         firebase
       }}
@@ -20,7 +20,7 @@ function App() {
           </Routes>
         </div>
       </div>
-    </firebaseContext.Provider>
+    </FirebaseContext.Provider>
   );
 }
 
