@@ -9,7 +9,7 @@ const SideBar = () => {
                 <p className="mt-3 text-gray-300 text-center">Administra tu restaurant.</p>
                 <nav className="mt-8">
                     <ul>
-                        <li className="mb-4">
+                        <li className="mb-2">
                             <NavLink className="p-1 text-white hover:bg-gray-50 hover:text-gray-900 block rounded-full" activeClassName="bg-blue-500 border-solid border-4 border-blue-800 rounded-full" end to="/">Ordenes</NavLink>
                         </li>
                         <li>
