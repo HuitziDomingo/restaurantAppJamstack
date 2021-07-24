@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import { FirebaseContext } from '../../firebase'
@@ -9,7 +9,7 @@ const NewPlat = () => {
 
     //Context con las operaciones de firebase
     const { firebase } = useContext(FirebaseContext)
-    console.log(firebase)
+    // console.log(firebase)
 
     //Hook de redirecionamiento
     const navigate = useNavigate()
@@ -32,6 +32,7 @@ const NewPlat = () => {
         onSubmit: plates => {
             try {
                 plates.exist = true
+                plates.image = urlImage
                 firebase.db.collection('products').add(plates)
                 navigate('/menu')//Redireccionasmos
             } catch (e) {
@@ -39,6 +40,33 @@ const NewPlat = () => {
             }
         }
     })
+
+    //Logica para las imagenes
+
+    const [upload, setUpload] = useState(false)
+    const [progress, setProgress] = useState(0)
+    const [urlImage, setUrlImage] = useState('')
+
+    const handleUploadStart = () => {
+        setProgress(0)
+        setUpload(true)
+    }
+    const handleUploadError = e => {
+        setUpload(false)
+        console.log(e)
+    }
+    const handleUploadSuccess = async name => {
+        setProgress(100)
+        setUpload(false)
+        //Almacenar la Url de destino
+        let url = await firebase.storage.ref('products').child(name).getDownloadURL()
+        console.log(url)
+        setUrlImage(url)
+    }
+    const handleUploadProgress = progress => {
+        setProgress(progress)
+        console.log(progress)
+    }
 
     return (
         <>
@@ -120,8 +148,26 @@ const NewPlat = () => {
                                 name="image"
                                 randomizerFilename
                                 storageRef={firebase.storage.ref('products')}
+                                onUploadStart={handleUploadStart}
+                                onUploadError={handleUploadError}
+                                onUploadSuccess={handleUploadSuccess}
+                                onProgress={handleUploadProgress}
                             />
                         </div>
+                        {upload && (
+                            <div className="h-12 relative w-full">
+                                <div className="bg-green-600 absolute left-0 top-0 text-white px-2 text-sm h-12 flex items-center rounded-full" style={{width: `${progress}%`}}>
+                                    {progress}%
+                                </div>
+                            </div>
+                        )}
+                        {
+                            urlImage && (
+                                <p className="bg-green-600 text-white p-3 text-center my-5 rounded-full">
+                                    Imagen cargada 100%.
+                                </p>
+                            )
+                        }
                         <div className="mb-4">
                             <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="description">Descripcion</label>
                             <textarea type="text"
