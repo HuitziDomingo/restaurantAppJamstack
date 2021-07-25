@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { Link } from 'react-router-dom'
 import { FirebaseContext } from '../../firebase'
+import { Plates } from '../ui'
 
 const Menu = () => {
 
@@ -20,7 +21,8 @@ const Menu = () => {
                 ...doc.data()
             }
         })
-        console.log(plates)
+        // console.log(plates)
+        savePlates(plates)
     }
 
     return (
@@ -29,6 +31,14 @@ const Menu = () => {
             <Link to="/nuevo-paltillo" className="bg-blue-800 hover:bg-blue-700 inline-block mb-5 p-2 text-white uppercase font-bold rounded-full">
                 Agregar Nuevo Platillo
             </Link>
+            {
+                plates.map(plat => (
+                    <Plates
+                        key={plat.id}
+                        plat={plat}
+                    />
+                ))
+            }
         </>
     )
 }
