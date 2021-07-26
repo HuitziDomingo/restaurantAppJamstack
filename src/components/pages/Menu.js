@@ -21,7 +21,6 @@ const Menu = () => {
                 ...doc.data()
             }
         })
-        // console.log(plates)
         savePlates(plates)
     }
 
